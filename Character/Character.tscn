@@ -1,0 +1,48 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Character/Character.gd" type="Script" id=1]
+[ext_resource path="res://Character/Sprites/Character_sprite.png" type="Texture" id=2]
+[ext_resource path="res://shaders/JitterFree.tres" type="Shader" id=3]
+
+[sub_resource type="Shader" id=2]
+code = "shader_type canvas_item;
+
+vec4 texturePointSmooth(sampler2D tex, vec2 uv) {
+	vec2 size = vec2(textureSize(tex, 0));
+	vec2 pixel = vec2(1.0) / size;
+	uv -= pixel * vec2(0.5);
+	vec2 uv_pixels = uv * size;
+	vec2 delta_pixel = fract(uv_pixels) - vec2(0.5);
+	vec2 ddxy = fwidth(uv_pixels);
+	vec2 mip = log2(ddxy) - 0.5;
+	return textureLod(tex, uv + (clamp(delta_pixel / ddxy, 0.0, 1.0) - delta_pixel) * pixel, min(mip.x, mip.y));
+}
+
+void fragment() {
+	vec4 Texture = texturePointSmooth(TEXTURE, UV);
+	COLOR = Texture.rgba;
+}"
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = SubResource( 2 )
+
+[sub_resource type="ShaderMaterial" id=3]
+shader = ExtResource( 3 )
+
+[node name="Character" type="KinematicBody2D"]
+material = SubResource( 1 )
+script = ExtResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+material = SubResource( 3 )
+position = Vector2( 2.04743, -17.511 )
+texture = ExtResource( 2 )
+hframes = 3
+frame = 2
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PoolVector2Array( 6, -1, 3, 0, -5, 0, -8, -1, -8, -6, -5, -7, 3, -7, 6, -6 )
+
+[node name="Timer" type="Timer" parent="."]
+process_mode = 0
+one_shot = true
