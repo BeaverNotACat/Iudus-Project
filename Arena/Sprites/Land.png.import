@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Arena_sprite.png-fdc59c45d3ef7d8337c6d2918f6383a7.stex"
+path="res://.import/Land.png-afe5031b0ca0f8583f0aa21203a7c440.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Arena/Sprites/Arena_sprite.png"
-dest_files=[ "res://.import/Arena_sprite.png-fdc59c45d3ef7d8337c6d2918f6383a7.stex" ]
+source_file="res://Arena/Sprites/Land.png"
+dest_files=[ "res://.import/Land.png-afe5031b0ca0f8583f0aa21203a7c440.stex" ]
 
 [params]
 
