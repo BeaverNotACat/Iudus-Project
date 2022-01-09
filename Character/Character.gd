@@ -10,7 +10,8 @@ export var DASH_LENGHT = 0.2
 #Вспомогательные глобальные переменные
 var state = MOVE
 var velocity = Vector2.ZERO
-var DASH_DIRECTION #ОТ этой надо избавится (Хотя я не придумал как сделать лучше, так что пусть будет~~)
+var aim_direction = Vector2.ZERO
+var dash_direction #ОТ этой надо избавится (Хотя я не придумал как сделать лучше, так что пусть будет~~)
 
 #Список состояний
 enum{
@@ -33,9 +34,13 @@ func _physics_process(delta):
 			move_character(delta)
 			get_action_input(delta)
 		DASH:
-			dash_state(DASH_DIRECTION)
+			dash_state()
 			get_action_input(delta)
-	print(velocity)
+	#Дебаг
+	#print(velocity)
+	print(aim_direction)
+	#print(position)
+
 ########################
 #Получаем направление движение
 func get_move_direction(_delta):
@@ -45,13 +50,21 @@ func get_move_direction(_delta):
 	motion_input = motion_input.normalized()
 	return(motion_input)
 
+#Получаем направление прицеливания в градусах
+func get_aim_direction(_delta):
+	var mouse_pos = get_global_mouse_position()
+	aim_direction = global_position.direction_to(mouse_pos)
+	aim_direction = aim_direction.normalized()
+	return(aim_direction)
+
 #Меняем состояние и начинаем дейсвие, если соблюдены условия
 func get_action_input(delta):
 	if Input.is_action_just_pressed("dash") && state == MOVE:
 		state = DASH
 		timer.start(DASH_LENGHT)
-		DASH_DIRECTION = get_move_direction(delta)
+		dash_direction = get_aim_direction(delta)
 ########################
+
 #Двигнаем спрайт спрайт по физике плюс обрабатываем коллизии
 func move_character(delta):
 	if get_move_direction(delta) != Vector2.ZERO:
@@ -62,8 +75,8 @@ func move_character(delta):
 	velocity = move_and_slide(velocity)
 
 #Двигаем спрайт со скоростью дэша
-func dash_state(move_direction):
-	velocity += move_direction * DASH_SPEED 
+func dash_state():
+	velocity += dash_direction * DASH_SPEED 
 	velocity = move_and_slide(velocity)
 
 #Возвращаемся в стандартное состояние, по истечениюю таймера

@@ -23,7 +23,7 @@ shader = ExtResource( 3 )
 [sub_resource type="ShaderMaterial" id=6]
 shader = ExtResource( 3 )
 
-[node name="World" type="YSort"]
+[node name="World" type="Node2D"]
 
 [node name="Arena" type="StaticBody2D" parent="."]
 __meta__ = {
