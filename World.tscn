@@ -64,6 +64,8 @@ position = Vector2( 253, 222 )
 
 [node name="Camera2D" type="Camera2D" parent="Character"]
 current = true
+smoothing_enabled = true
+smoothing_speed = 10.0
 
 [node name="DownerWalls" type="Sprite" parent="."]
 material = SubResource( 3 )
