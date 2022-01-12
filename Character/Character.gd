@@ -69,3 +69,7 @@ func dash_state(move_direction):
 #Возвращаемся в стандартное состояние, по истечениюю таймера
 func _timer_timeout():
 	state = MOVE
+
+
+
+#xnj-nj ,kz? hfccrkflrf/ Lf gj[eq]
