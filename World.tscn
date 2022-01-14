@@ -23,7 +23,7 @@ shader = ExtResource( 3 )
 [sub_resource type="ShaderMaterial" id=6]
 shader = ExtResource( 3 )
 
-[node name="World" type="YSort"]
+[node name="World" type="Node2D"]
 
 [node name="Arena" type="StaticBody2D" parent="."]
 __meta__ = {
@@ -64,6 +64,8 @@ position = Vector2( 253, 222 )
 
 [node name="Camera2D" type="Camera2D" parent="Character"]
 current = true
+smoothing_enabled = true
+smoothing_speed = 10.0
 
 [node name="DownerWalls" type="Sprite" parent="."]
 material = SubResource( 3 )
