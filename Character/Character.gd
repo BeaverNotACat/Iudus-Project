@@ -6,6 +6,7 @@ export var MAX_SPEED = 150
 export var FRICTION = 0.57
 export var DASH_SPEED = 100
 export var DASH_LENGHT = 0.2
+export var MELEE_CHARGING_TIME = 1
 
 #Вспомогательные глобальные переменные
 var state = MOVE
@@ -13,33 +14,46 @@ var velocity = Vector2.ZERO
 var aim_direction = Vector2.ZERO
 var dash_direction #ОТ этой надо избавится (Хотя я не придумал как сделать лучше, так что пусть будет~~)
 
+#булевы перменные в помощь машине состояний
+var is_charged : bool = false
+
 #Список состояний
 enum{
 	MOVE,
 	DASH
-	LIGHT_ATTACK
+	ATTACK_PREPARE
 }
 
 #Импорт узлов
-onready var timer = $Timer
+onready var dash_timer = $Dash_timer
+onready var attack_timer = $Attack_timer
 
 #соединение переменных с узлами и добавление к сигналов
 func _ready():
-	timer.connect("timeout", self, "_timer_timeout")
+	dash_timer.connect("timeout", self, "_dash_timer_timeout")
+	attack_timer.connect("timeout", self, "_attack_timer_timeout")
 
 #Лоховская машина состояний(Для более продвинутой не хватило мозгов)
 func _physics_process(delta):
 	match state:
 		MOVE:
 			move_character(delta)
-			get_action_input(delta)
+			get_dash_input(delta)
+			get_attack_pressed()
+			get_collisions()
 		DASH:
-			dash_state()
-			get_action_input(delta)
+			dash()
+			get_collisions()
+		ATTACK_PREPARE:
+			move_character(delta)
+			get_dash_input(delta)
+			get_attack_released()
+			get_collisions()
 	#Дебаг
-	#print(velocity)
-	#print(aim_direction)
-	#print(position)
+		#print(velocity)
+		#print(aim_direction)
+		#print(position)
+		#print(state)
 
 ########################
 #Получаем направление движение
@@ -62,27 +76,55 @@ func get_aim_direction(_delta, goal):
 		return(aim_direction.angle())
 
 #Меняем состояние и начинаем дейсвие, если соблюдены условия
-func get_action_input(delta):
-	if Input.is_action_just_pressed("dash") && state == MOVE:
+func get_dash_input(delta):
+	if Input.is_action_just_pressed("dash"):
 		state = DASH
-		timer.start(DASH_LENGHT)
+		dash_timer.start(DASH_LENGHT)
 		dash_direction = get_aim_direction(delta, 0)
+		velocity = Vector2.ZERO
+
+#Узнаем ЗАЖАТА ли кнопка, если да то начинаем зарядку сильной атаки по таймеру
+func get_attack_pressed():
+	if Input.is_action_just_pressed("melee_attack"):
+		state = ATTACK_PREPARE
+		attack_timer.start(MELEE_CHARGING_TIME)
+
+#Узнаем отжата ли кнопка, если если сильная атака успела зарядится то сильную, иначе
+func get_attack_released():
+	if Input.is_action_just_released("melee_attack") && state == ATTACK_PREPARE:
+		if is_charged == true:
+			charged_meelee_attack()
+		else:
+			light_melee_attack()
 ########################
 
-#Двигнаем спрайт спрайт по физике плюс обрабатываем коллизии
+#Двигаем спрайт спрайт по физике плюс обрабатываем коллизии
 func move_character(delta):
 	if get_move_direction(delta) != Vector2.ZERO:
 		velocity = velocity.clamped(MAX_SPEED)
 		velocity = velocity.move_toward(MAX_SPEED * get_move_direction(delta), ACCELERATION)
 	else:
 		velocity = velocity.linear_interpolate(Vector2.ZERO, FRICTION)
-	velocity = move_and_slide(velocity)
 
 #Двигаем спрайт со скоростью дэша
-func dash_state():
+func dash():
 	velocity += DASH_SPEED * dash_direction 
+
+#Пока пропустим
+func light_melee_attack():
+	state = MOVE
+#Пока пропустим x2
+func charged_meelee_attack():
+	state = MOVE
+
+#обработка коллизий внесенная в отдельную функцию
+func get_collisions():
 	velocity = move_and_slide(velocity)
 
 #Возвращаемся в стандартное состояние, по истечениюю таймера
-func _timer_timeout():
+func _dash_timer_timeout():
 	state = MOVE
+
+#По истечению таймера считаем что сильная мили атка зарядилась
+func _attack_timer_timeout():
+	is_charged = true
