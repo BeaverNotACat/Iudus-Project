@@ -1,10 +1,10 @@
 extends KinematicBody2D
 
 #Константные значения для физики
-export var ACCELERATION = 25
+export var ACCELERATION = 800
 export var MAX_SPEED = 150
-export var FRICTION = 0.57
-export var DASH_SPEED = 100
+export var FRICTION = 1000
+export var DASH_SPEED = 10000
 export var DASH_LENGHT = 0.2
 export var MELEE_CHARGING_TIME = 1
 
@@ -38,26 +38,26 @@ func _physics_process(delta):
 	match state:
 		MOVE:
 			move_character(delta)
-			get_dash_input(delta)
+			get_dash_input()
 			get_attack_pressed()
-			get_collisions()
+			collide()
 		DASH:
-			dash()
-			get_collisions()
+			dash(delta)
+			collide()
 		ATTACK_PREPARE:
 			move_character(delta)
-			get_dash_input(delta)
+			get_dash_input()
 			get_attack_released()
-			get_collisions()
+			collide()
 	#Дебаг
-		#print(velocity)
+	print(velocity)
 		#print(aim_direction)
 		#print(position)
 		#print(state)
 
 ########################
 #Получаем направление движение
-func get_move_direction(_delta):
+func get_move_direction():
 	var motion_input = Vector2.ZERO
 	motion_input.x = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
 	motion_input.y = Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
@@ -66,7 +66,7 @@ func get_move_direction(_delta):
 
 #Получаем направление прицеливания
 #Если goal 1, то выводим градусы, иначе единичный вектор
-func get_aim_direction(_delta, goal):
+func get_aim_direction(goal):
 	var mouse_pos = get_global_mouse_position()
 	aim_direction = global_position.direction_to(mouse_pos)
 	aim_direction = aim_direction.normalized()
@@ -76,11 +76,11 @@ func get_aim_direction(_delta, goal):
 		return(aim_direction.angle())
 
 #Меняем состояние и начинаем дейсвие, если соблюдены условия
-func get_dash_input(delta):
+func get_dash_input():
 	if Input.is_action_just_pressed("dash"):
 		state = DASH
 		dash_timer.start(DASH_LENGHT)
-		dash_direction = get_aim_direction(delta, 0)
+		dash_direction = get_aim_direction(0)
 		velocity = Vector2.ZERO
 
 #Узнаем ЗАЖАТА ли кнопка, если да то начинаем зарядку сильной атаки по таймеру
@@ -100,15 +100,16 @@ func get_attack_released():
 
 #Двигаем спрайт спрайт по физике плюс обрабатываем коллизии
 func move_character(delta):
-	if get_move_direction(delta) != Vector2.ZERO:
+	if get_move_direction() != Vector2.ZERO:
 		velocity = velocity.clamped(MAX_SPEED)
-		velocity = velocity.move_toward(MAX_SPEED * get_move_direction(delta), ACCELERATION)
+		velocity = velocity.move_toward(MAX_SPEED * get_move_direction(), ACCELERATION * delta)
 	else:
-		velocity = velocity.linear_interpolate(Vector2.ZERO, FRICTION)
+		velocity = velocity.clamped(MAX_SPEED)
+		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
 
 #Двигаем спрайт со скоростью дэша
-func dash():
-	velocity += DASH_SPEED * dash_direction 
+func dash(delta):
+	velocity += DASH_SPEED * dash_direction * delta
 
 #Пока пропустим
 func light_melee_attack():
@@ -118,7 +119,7 @@ func charged_meelee_attack():
 	state = MOVE
 
 #обработка коллизий внесенная в отдельную функцию
-func get_collisions():
+func collide():
 	velocity = move_and_slide(velocity)
 
 #Возвращаемся в стандартное состояние, по истечениюю таймера
