@@ -50,7 +50,7 @@ func _physics_process(delta):
 			get_attack_released()
 			collide()
 	#Дебаг
-		#print(velocity)
+	print(velocity)
 		#print(aim_direction)
 		#print(position)
 		#print(state)
@@ -100,10 +100,11 @@ func get_attack_released():
 
 #Двигаем спрайт спрайт по физике плюс обрабатываем коллизии
 func move_character(delta):
-	velocity = velocity.clamped(MAX_SPEED)
 	if get_move_direction() != Vector2.ZERO:
+		velocity = velocity.clamped(MAX_SPEED)
 		velocity = velocity.move_toward(MAX_SPEED * get_move_direction(), ACCELERATION * delta)
 	else:
+		velocity = velocity.clamped(MAX_SPEED)
 		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
 
 #Двигаем спрайт со скоростью дэша
