@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Downer walls.png-fd4f898976002dc0d393c0777c7963fc.stex"
+path="res://.import/Arena_walls_and_floor.png-961a324a6fc8e63d6aab0ce2f60bae2f.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Arena/Sprites/Downer walls.png"
-dest_files=[ "res://.import/Downer walls.png-fd4f898976002dc0d393c0777c7963fc.stex" ]
+source_file="res://Arena/Sprites/Arena_walls_and_floor.png"
+dest_files=[ "res://.import/Arena_walls_and_floor.png-961a324a6fc8e63d6aab0ce2f60bae2f.stex" ]
 
 [params]
 

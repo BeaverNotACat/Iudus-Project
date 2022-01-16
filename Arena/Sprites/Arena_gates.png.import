@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Gates.png-3ceeec5a0d840106c17df917801e164c.stex"
+path="res://.import/Arena_gates.png-a5f2d2c2438d7f36c6cd00cf14e7e27c.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Arena/Sprites/Gates.png"
-dest_files=[ "res://.import/Gates.png-3ceeec5a0d840106c17df917801e164c.stex" ]
+source_file="res://Arena/Sprites/Arena_gates.png"
+dest_files=[ "res://.import/Arena_gates.png-a5f2d2c2438d7f36c6cd00cf14e7e27c.stex" ]
 
 [params]
 
