@@ -1,57 +1,59 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://shaders/JitterFree.tres" type="Shader" id=1]
-[ext_resource path="res://Arena/Sprites/Tribunes.png" type="Texture" id=2]
-[ext_resource path="res://Arena/Sprites/Land.png" type="Texture" id=3]
-[ext_resource path="res://Arena/Sprites/Upper walls.png" type="Texture" id=4]
-[ext_resource path="res://Arena/Sprites/Gates.png" type="Texture" id=5]
-[ext_resource path="res://Arena/Sprites/Downer walls.png" type="Texture" id=6]
+[ext_resource path="res://Arena/Sprites/Arena_walls_and_floor.png" type="Texture" id=2]
+[ext_resource path="res://Arena/Sprites/Arena_gates.png" type="Texture" id=3]
+[ext_resource path="res://Arena/Sprites/Arena_tribunes.png" type="Texture" id=4]
 
-[sub_resource type="ShaderMaterial" id=2]
-shader = ExtResource( 1 )
-
-[sub_resource type="ShaderMaterial" id=3]
+[sub_resource type="ShaderMaterial" id=7]
 shader = ExtResource( 1 )
 
 [sub_resource type="ShaderMaterial" id=4]
-shader = ExtResource( 1 )
-
-[sub_resource type="ShaderMaterial" id=5]
 shader = ExtResource( 1 )
 
 [sub_resource type="ShaderMaterial" id=6]
 shader = ExtResource( 1 )
 
 [node name="Arena" type="StaticBody2D"]
+position = Vector2( -2, 0 )
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="Land" type="Sprite" parent="."]
-material = SubResource( 2 )
-position = Vector2( 266, 238 )
+[node name="ArenaGates" type="Sprite" parent="."]
+material = SubResource( 7 )
+position = Vector2( 268.5, 106 )
 texture = ExtResource( 3 )
+__meta__ = {
+"_edit_lock_": true
+}
 
-[node name="DownerWalls" type="Sprite" parent="."]
-material = SubResource( 3 )
-position = Vector2( 266, 318 )
-texture = ExtResource( 6 )
+[node name="Gates_colision" type="CollisionPolygon2D" parent="."]
+position = Vector2( 57, 0 )
+polygon = PoolVector2Array( 163, 123, 260, 123, 260, 122, 163, 122 )
+__meta__ = {
+"_edit_lock_": true
+}
 
-[node name="UpperWalls" type="Sprite" parent="."]
+[node name="ArenaWallsAndFloor" type="Sprite" parent="."]
 material = SubResource( 4 )
-position = Vector2( 266, 129 )
-texture = ExtResource( 4 )
-
-[node name="Gates" type="Sprite" parent="."]
-material = SubResource( 5 )
-position = Vector2( 266, 108 )
-texture = ExtResource( 5 )
-
-[node name="Tribunes" type="Sprite" parent="."]
-material = SubResource( 6 )
-position = Vector2( 266, 49 )
+position = Vector2( 268.5, 190.5 )
 texture = ExtResource( 2 )
+__meta__ = {
+"_edit_lock_": true
+}
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
-scale = Vector2( 1, 1.00009 )
-polygon = PoolVector2Array( 169, 378, 169, 377, 365.927, 377.001, 380, 372, 475, 315, 479, 308.972, 503.03, 257.979, 504, 256, 504, 218, 503.073, 216.97, 473, 178, 464, 169, 359, 126, 350, 123, 184, 123, 175, 126, 70, 169, 60, 178, 30.947, 217.188, 30, 217.98, 30, 256, 30.9148, 256.977, 55, 307.972, 60, 312, 155, 371, 168, 377, 168, 378, 0, 378, 0, 0, 534, 0, 534, 378 )
+[node name="Arena_colision" type="CollisionPolygon2D" parent="."]
+position = Vector2( 2, 0 )
+polygon = PoolVector2Array( 218, 123, 183, 123, 175, 126, 173, 126, 69, 169, 67, 178, 61, 178, 60, 177, 30, 219, 30, 256, 54, 309, 59, 315, 153, 373, 169, 378, 365, 378, 382, 374, 475, 315, 480, 310, 504, 256, 504, 218, 474, 177, 473, 178, 467, 178, 465, 169, 363, 126, 359, 126, 351, 123, 315, 123, 315, 122, 351, 122, 359, 125, 363, 125, 465, 168, 474, 176, 505, 218, 505, 256, 481, 310, 475, 316, 382, 375, 365, 379, 169, 379, 153, 374, 59, 316, 53, 309, 29, 257, 29, 219, 60, 176, 69, 168, 173, 125, 175, 125, 183, 122, 218, 122 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="ArenaTribunes" type="Sprite" parent="."]
+material = SubResource( 6 )
+position = Vector2( 269, 47.5 )
+texture = ExtResource( 4 )
+__meta__ = {
+"_edit_lock_": true
+}

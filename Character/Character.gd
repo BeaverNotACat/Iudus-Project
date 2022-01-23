@@ -27,6 +27,8 @@ enum{
 #Импорт узлов
 onready var dash_timer = $Dash_timer
 onready var attack_timer = $Attack_timer
+onready var animation_tree = $AnimationTree
+onready var animation_state = animation_tree.get("parameters/playback")
 
 #соединение переменных с узлами и добавление к сигналов
 func _ready():
@@ -50,7 +52,7 @@ func _physics_process(delta):
 			get_attack_released()
 			collide()
 	#Дебаг
-	print(velocity)
+		#print(velocity)
 		#print(aim_direction)
 		#print(position)
 		#print(state)
@@ -100,10 +102,17 @@ func get_attack_released():
 
 #Двигаем спрайт спрайт по физике плюс обрабатываем коллизии
 func move_character(delta):
-	if get_move_direction() != Vector2.ZERO:
+	var move_direction = get_move_direction()
+	if move_direction != Vector2.ZERO:
+		
+		animation_tree.set("parameters/Idle/blend_position", move_direction)
+		animation_tree.set("parameters/Run/blend_position", move_direction)
+		animation_state.travel("Run")
+		
 		velocity = velocity.clamped(MAX_SPEED)
-		velocity = velocity.move_toward(MAX_SPEED * get_move_direction(), ACCELERATION * delta)
+		velocity = velocity.move_toward(MAX_SPEED * move_direction, ACCELERATION * delta)
 	else:
+		animation_state.travel("Idle")
 		velocity = velocity.clamped(MAX_SPEED)
 		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
 
